@@ -1,40 +1,50 @@
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
-import './App.css'
-import { HomePage } from './components/Home.page'
-import { RQSuperHeroesPage } from './components/RQSuperHeroes.page'
-import { SuperHeroesPage } from './components/SuperHeroes.page'
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
+import RQSuperheroes from './pages/RQSuperheroes';
+import Superheroes from './pages/Superheroes';
+
+import OneRQsuperheroes from './pages/OneRQsuperheroes';
+import ParrallelQueries from './pages/ParrallelQueries';
+import DynamicParrallelQueries from './pages/DynamicParrallelQueries';
+import DependentQuerires from './pages/DependentQuerires';
+import PaginatedQueries from './pages/PaginatedQueries';
+import InfiniteQueries from './pages/InfiniteQueries';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 function App() {
+  const queryClient = new QueryClient();
   return (
-    <Router>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to='/'>Home</Link>
-            </li>
-            <li>
-              <Link to='/super-heroes'>Traditional Super Heroes</Link>
-            </li>
-            <li>
-              <Link to='/rq-super-heroes'>RQ Super Heroes</Link>
-            </li>
-          </ul>
-        </nav>
-        <Switch>
-          <Route path='/super-heroes'>
-            <SuperHeroesPage />
-          </Route>
-          <Route path='/rq-super-heroes'>
-            <RQSuperHeroesPage />
-          </Route>
-          <Route path='/'>
-            <HomePage />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
-  )
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Navbar />
+        <main className="container mx-auto px-0 xl:px-10">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/superheroes" element={<Superheroes />} />
+            <Route path="/RQsuperheroes" element={<RQSuperheroes />} />
+            <Route
+              path="/RQsuperheroes/:heroesId"
+              element={<OneRQsuperheroes />}
+            />
+            <Route path="/parallel-queries" element={<ParrallelQueries />} />
+            <Route
+              path="/dynamicPQ"
+              element={<DynamicParrallelQueries dynamicQ={[1, 3]} />}
+            />
+            <Route
+              path="/dependentQ"
+              element={<DependentQuerires email="vishwas@example.com" />}
+            />
+            <Route path="/paginatedQ" element={<PaginatedQueries />} />
+            <Route path="/infiniteQ" element={<InfiniteQueries />} />
+          </Routes>
+        </main>
+      </BrowserRouter>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
 }
 
-export default App
+export default App;
